@@ -32,4 +32,15 @@ Why this works: AWS provides an AWS-managed prefix list for CloudFront origin-fa
 
 2) Add a secret “origin header” that ALB requires
 CloudFront will add this header, and ALB will only forward requests that contain it. This is the second layer (defense-in-depth), because anyone can create a CloudFront distribution and use the prefix list trick alone isn’t perfect. AWS explicitly documents the “custom header + ALB rule” approach.
+#lab2_cloudfront_origin_cloaking.tf
 
+Then on the ALB listener, students add a rule:
+If header matches → forward to TG
+Else → fixed 403
+Terraform-wise, this is aws_lb_listener_rule on your HTTPS listener.
+documents the “custom header + ALB rule” approach.
+#lab2_cloudfront_origin_cloaking.tf
+
+3) WAF moves to CloudFront (WAFv2 scope CLOUDFRONT)
+CloudFront uses global scope Web ACLs (scope = "CLOUDFRONT").
+#lab2_cloudfront_shield_waf.tf
